@@ -2,6 +2,7 @@ import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
 import compression from "compression";
+import userRouter from "./modules/user/user.routes";
 
 dotenv.config();
 
@@ -15,6 +16,9 @@ app.use(
     credentials: true,
   })
 );
+
+// routes
+app.use("/api/v1", userRouter);
 
 app.get("/", (req, res) => {
   res.send("API is running");
