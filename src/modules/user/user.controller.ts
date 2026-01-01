@@ -18,6 +18,24 @@ const createUser = async (req: Request, res: Response, next: NextFunction) => {
   }
 };
 
+const getAllUsers = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const users = await UserService.getAllUsersService();
+    res.status(201).json({
+      success: true,
+      message: "Users fetched successfully!",
+      users,
+    });
+  } catch (error) {
+    console.log("failed to get all users! sorry", error);
+    return res.status(500).json({
+      success: false,
+      message: "Internal server issue!",
+    });
+  }
+};
+
 export const UserController = {
   createUser,
+  getAllUsers,
 };
