@@ -35,7 +35,30 @@ const getAllUsers = async (req: Request, res: Response, next: NextFunction) => {
   }
 };
 
+const getSingleUserById = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const user = await UserService.getSingleUserService(Number(req.params.id));
+
+    res.status(201).json({
+      success: true,
+      message: "User fetched successfully!",
+      user,
+    });
+  } catch (error) {
+    console.log("failed to get user! sorry", error);
+    return res.status(500).json({
+      success: false,
+      message: "Internal server issue!",
+    });
+  }
+};
+
 export const UserController = {
   createUser,
   getAllUsers,
+  getSingleUserById,
 };

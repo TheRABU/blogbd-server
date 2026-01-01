@@ -33,7 +33,30 @@ const getAllUsersService = async () => {
   return result;
 };
 
+const getSingleUserService = async (id: number) => {
+  const result = prisma.user.findUnique({
+    where: {
+      id,
+    },
+    select: {
+      id: true,
+      name: true,
+      email: true,
+      role: true,
+      phone: true,
+      picture: true,
+      createdAt: true,
+      updatedAt: true,
+      status: true,
+      posts: true,
+    },
+  });
+
+  return result;
+};
+
 export const UserService = {
   createUserService,
   getAllUsersService,
+  getSingleUserService,
 };
