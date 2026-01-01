@@ -1,9 +1,25 @@
 import { Prisma, User } from "@prisma/client";
 import { prisma } from "../../../src/config/db";
+import bcrypt from "bcrypt";
 
 const createUserService = async (
   payload: Prisma.UserCreateInput
 ): Promise<User> => {
+  const { email } = payload;
+  const isUserExist = await prisma.user.findUnique({
+    where: {
+      email,
+    },
+  });
+
+  if (isUserExist) {
+    throw new Error("User with this email already exists!");
+  }
+
+  const hashedPassword = await bcrypt.hash(payload.password as string, 12);
+
+  payload.password = hashedPassword;
+
   const createdUser = await prisma.user.create({
     data: payload,
   });

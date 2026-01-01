@@ -3,6 +3,7 @@ import cors from "cors";
 import dotenv from "dotenv";
 import compression from "compression";
 import userRouter from "./modules/user/user.routes";
+import authRouter from "./modules/auth/auth.routes";
 
 dotenv.config();
 
@@ -18,7 +19,8 @@ app.use(
 );
 
 // routes
-app.use("/api/v1", userRouter);
+app.use("/api/v1/user", userRouter);
+app.use("/api/v1/auth", authRouter);
 
 app.get("/", (req, res) => {
   res.send("API is running");
