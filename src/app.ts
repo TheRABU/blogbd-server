@@ -5,11 +5,13 @@ import compression from "compression";
 import userRouter from "./modules/user/user.routes";
 import authRouter from "./modules/auth/auth.routes";
 import postRouter from "./modules/post/post.routes";
+import cookieParser from "cookie-parser";
 
 dotenv.config();
 
 const app = express();
 
+app.use(cookieParser());
 app.use(express.json());
 app.use(compression());
 app.use(

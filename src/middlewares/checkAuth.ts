@@ -6,7 +6,7 @@ import { prisma } from "../config/db";
 declare global {
   namespace Express {
     interface Request {
-      user?: JwtPayload;
+      user: JwtPayload;
     }
   }
 }
@@ -15,8 +15,11 @@ export const checkAuth =
   (...authRoles: string[]) =>
   async (req: Request, res: Response, next: NextFunction) => {
     try {
+      // const accessToken = req.cookies.accessToken;
+      // req.header("Authorization")?.replace("Bearer ", "");
+
       const accessToken =
-        req.cookies.accessToken ||
+        req.cookies?.accessToken ||
         req.header("Authorization")?.replace("Bearer ", "");
 
       if (!accessToken) {
@@ -28,7 +31,7 @@ export const checkAuth =
       }
       const verifiedToken = verifyToken(
         accessToken,
-        process.env.JWT_VERIFY_SECRET as string
+        process.env.JWT_ACCESS_SECRET as string
       ) as JwtPayload;
       if (!verifiedToken) {
         res.status(404).json({
@@ -61,7 +64,7 @@ export const checkAuth =
       req.user = verifiedToken;
       next();
     } catch (error: any) {
-      console.log("jwt error", error.message);
+      console.log("checkAuth error", error.message);
       next(error);
     }
   };
