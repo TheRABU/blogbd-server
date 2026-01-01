@@ -57,8 +57,57 @@ const getSingleUserById = async (
   }
 };
 
+const updateUserById = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const updatedUserData = await UserService.updateUserByIdService(
+      Number(req.params.id),
+      req.body
+    );
+    res.status(201).json({
+      success: true,
+      message: "User updated successfully!",
+      updatedUserData,
+    });
+  } catch (error) {
+    console.log("failed to update user! sorry", error);
+    return res.status(500).json({
+      success: false,
+      message: "Internal server issue!",
+    });
+  }
+};
+
+const deleteUserById = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const deletedData = await UserService.deleteUserByIdService(
+      Number(req.params.id)
+    );
+    res.status(201).json({
+      success: true,
+      message: "User deleted successfully!",
+      deletedData,
+    });
+  } catch (error) {
+    console.log("failed to delete user! sorry", error);
+    return res.status(500).json({
+      success: false,
+      message: "Internal server issue!",
+    });
+  }
+};
+
 export const UserController = {
   createUser,
   getAllUsers,
   getSingleUserById,
+  updateUserById,
+  deleteUserById,
 };
