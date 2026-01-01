@@ -4,6 +4,7 @@ import dotenv from "dotenv";
 import compression from "compression";
 import userRouter from "./modules/user/user.routes";
 import authRouter from "./modules/auth/auth.routes";
+import postRouter from "./modules/post/post.routes";
 
 dotenv.config();
 
@@ -21,6 +22,7 @@ app.use(
 // routes
 app.use("/api/v1/user", userRouter);
 app.use("/api/v1/auth", authRouter);
+app.use("/api/v1/post", postRouter);
 
 app.get("/", (req, res) => {
   res.send("API is running");
