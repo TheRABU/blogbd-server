@@ -3,17 +3,17 @@ import { PostServices } from "./post.service";
 
 const createPost = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const email = req.user.email;
-    const { id: authorId } = req.user;
-    if (!email) {
-      return res.status(404).json({
-        success: false,
-        message: "No user email found!!!!!",
-      });
-    }
+    // const email = req.user.email;
+    // const { id: authorId } = req.user;
+    // if (!email) {
+    //   return res.status(404).json({
+    //     success: false,
+    //     message: "No user email found!!!!!",
+    //   });
+    // }
     const postData = {
       ...req.body,
-      authorId: authorId,
+      // authorId: authorId,
     };
 
     const post = await PostServices.createPostService(postData);
@@ -115,6 +115,28 @@ const getBlogStat = async (req: Request, res: Response) => {
   }
 };
 
+const getMyPosts = async (req: Request, res: Response) => {
+  try {
+    const email = req.user.email;
+
+    const page = Number(req.query.page) || 1;
+    const limit = Number(req.query.limit) || 10;
+    const result = await PostServices.getMyPostsService({
+      email,
+      page,
+      limit,
+    });
+    res.status(200).json({
+      success: true,
+      message: "User posts fetched successfully",
+      data: result,
+      pagination: result.pagination,
+    });
+  } catch (error) {
+    res.status(500).json({ error: "Failed to fetch stats", details: error });
+  }
+};
+
 export const PostControllers = {
   createPost,
   getAllPosts,
@@ -122,4 +144,6 @@ export const PostControllers = {
   updatePost,
   deletePost,
   getBlogStat,
+  //user
+  getMyPosts,
 };

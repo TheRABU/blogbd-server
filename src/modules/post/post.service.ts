@@ -74,6 +74,8 @@ const getAllPosts = async ({
 };
 
 const getPostById = async (id: number) => {
+  console.log("getPostById called with id:", id);
+  if (!id) throw new Error("Invalid post id");
   return await prisma.$transaction(async (tx) => {
     await tx.post.update({
       where: { id },
@@ -148,6 +150,54 @@ const getBlogStat = async () => {
   });
 };
 
+// get post of a particular user
+const getMyPostsService = async ({
+  email,
+  page = 1,
+  limit = 10,
+}: {
+  email: string;
+  page: number;
+  limit: number;
+}) => {
+  const skip = (page - 1) * limit;
+
+  const where = {
+    author: {
+      email,
+    },
+  };
+  const posts = await prisma.post.findMany({
+    where,
+    skip,
+    take: limit,
+    include: {
+      author: {
+        select: {
+          id: true,
+          name: true,
+          email: true,
+        },
+      },
+    },
+    orderBy: {
+      createdAt: "desc",
+    },
+  });
+
+  const total = await prisma.post.count({ where });
+
+  return {
+    posts,
+    pagination: {
+      page,
+      limit,
+      total,
+      totalPages: Math.ceil(total / limit),
+    },
+  };
+};
+
 export const PostServices = {
   createPostService,
   getAllPosts,
@@ -155,4 +205,6 @@ export const PostServices = {
   updatePost,
   deletePost,
   getBlogStat,
+  // user
+  getMyPostsService,
 };

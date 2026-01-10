@@ -7,9 +7,16 @@ const postRouter = Router();
 
 postRouter.get("/stats", PostControllers.getBlogStat);
 
-postRouter.post("/", checkAuth(Role.USER), PostControllers.createPost);
+// getMyPosts
+postRouter.get("/my-posts", checkAuth(Role.USER), PostControllers.getMyPosts);
+
+postRouter.post("/", PostControllers.createPost);
 postRouter.get("/", PostControllers.getAllPosts);
-postRouter.get("/:id", PostControllers.getPostById);
+postRouter.get(
+  "/:id",
+  checkAuth(Role.USER, Role.ADMIN),
+  PostControllers.getPostById
+);
 postRouter.patch("/:id", PostControllers.updatePost);
 postRouter.delete("/:id", PostControllers.deletePost);
 
